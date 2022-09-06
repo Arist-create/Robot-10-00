@@ -12,6 +12,7 @@ var j = 0;
         var date = new Date()
         var date1 = date.toLocaleTimeString("sv-SE",{timeZone: "Europe/Moscow"})
         var day = date.getDay()
+        console.log(date1)
        
         if (date1.slice(0,2) == 10) {
             j = 0
