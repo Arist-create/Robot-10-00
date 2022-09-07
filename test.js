@@ -7,11 +7,6 @@ import { long, short } from './baza.js'
 import { TradingViewAPI } from 'tradingview-scraper';
 const tv = new TradingViewAPI();
 
-var date = new Date()
-        var date1 = date.toLocaleTimeString("sv-SE",{timeZone: "Europe/Moscow"})
-        var day = date.getDay()
-        var j = 0
-        if (date1.slice(0,2) == 3) {
-            j+=1
-        }
-        console.log(j)
+let zapros =  await tv.getTicker('FWB:TL0')
+                        const tickerbid = zapros.bid
+                        console.log( tickerbid )

@@ -12,7 +12,6 @@ var j = 0;
         var date = new Date()
         var date1 = date.toLocaleTimeString("sv-SE",{timeZone: "Europe/Moscow"})
         var day = date.getDay()
-        console.log(date1)
        
         if (date1.slice(0,2) == 10) {
             j = 0
@@ -46,7 +45,7 @@ var j = 0;
                             }
                             const price = (Wprice - (Wprice/100*1.25)).toFixed(2)
 
-                            console.log(price)
+                            console.log(`Цена покупки ${long[i].SPB}: ${price}`+'\n'+`Bid ${long[i].SPB}: ${Wprice}`+'\n')
 
                             const kolvo = 8000/price
                     
@@ -59,7 +58,7 @@ var j = 0;
                                 method: 'POST',
                                 body: JSON.stringify({
                                         
-                                    Quantity : 1,
+                                    Quantity : kolvo,
                                     Side: "buy",
                                     TriggerPrice: `${price}`,
                                     Price: `${price}`,
@@ -100,7 +99,7 @@ var j = 0;
                             }
 
                             const price = (Wprice + (Wprice/100*1.25)).toFixed(2)
-                            console.log(price)
+                            console.log(`Цена продажи ${short[i].SPB}: ${price}`+'\n'+`Ask ${short[i].SPB}: ${Wprice}`+'\n')
                             const kolvo = 4000/price
                     
                             const uniqueId = (Math.random() * (99999999999 - 1) + 1).toFixed(0)
@@ -112,7 +111,7 @@ var j = 0;
                                 method: 'POST',
                                 body: JSON.stringify({
                                         
-                                    Quantity : 1,
+                                    Quantity : kolvo,
                                     Side: "sell",
                                     TriggerPrice: `${price}`,
                                     Price: `${price}`,
