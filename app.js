@@ -13,10 +13,10 @@ var j = 0;
         var date1 = date.toLocaleTimeString("sv-SE",{timeZone: "Europe/Moscow"})
         var day = date.getDay()
        
-        if (date1.slice(0,2) == 10) {
+        if (date1.slice(0,2) == 11) {
             j = 0
         }
-        if (date1.slice(0,2) == 9 & date1.slice(3,5) == 59 & day != 0 & day != 6 & j == 0 ) {
+        if (date1.slice(0,2) == 10 & date1.slice(3,5) == 0 & day != 0 & day != 6 & j == 0 ) {
 
             request.post(`https://oauth.alor.ru/refresh?token=${refreshToken}`, async function(error, response, body){
                 try{
@@ -53,14 +53,14 @@ var j = 0;
                 
                             var time = (Math.round(new Date().getTime()/1000.0)) + 120
                 
-                            fetch('https://api.alor.ru/warptrans/ITRADE/v2/client/orders/actions/takeProfitLimit',{
+                            fetch('https://api.alor.ru/commandapi/warptrans/TRADE/v2/client/orders/actions/limit',{
                 
                                 method: 'POST',
                                 body: JSON.stringify({
                                         
-                                    Quantity : kolvo,
-                                    Side: "buy",
-                                    TriggerPrice: `${price}`,
+                                    side: "buy",
+                                    type: "limit",
+                                    quantity: 1,
                                     Price: `${price}`,
                                                 
                                     Instrument: {
@@ -106,14 +106,14 @@ var j = 0;
                 
                             var time = (Math.round(new Date().getTime()/1000.0)) + 120
                 
-                            fetch('https://api.alor.ru/warptrans/ITRADE/v2/client/orders/actions/takeProfitLimit',{
+                            fetch('https://api.alor.ru/commandapi/warptrans/TRADE/v2/client/orders/actions/limit',{
                 
                                 method: 'POST',
                                 body: JSON.stringify({
                                         
-                                    Quantity : kolvo,
-                                    Side: "sell",
-                                    TriggerPrice: `${price}`,
+                                    side: "sell",
+                                    type: "limit",
+                                    quantity: 1,
                                     Price: `${price}`,
                                                 
                                     Instrument: {
@@ -142,5 +142,5 @@ var j = 0;
             j+=1
         }  
     loops()
-    },1000)
+    },100)
 })()                     
