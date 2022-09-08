@@ -47,7 +47,8 @@ var j = 0;
 
                             console.log(`Цена покупки ${long[i].SPB}: ${price}`+'\n'+`Bid ${long[i].SPB}: ${Wprice}`+'\n')
 
-                            const kolvo = 8000/price
+                            const kolvo = 400/price
+                           
                     
                             const uniqueId = (Math.random() * (99999999999 - 1) + 1).toFixed(0)
                 
@@ -60,7 +61,7 @@ var j = 0;
                                         
                                     side: "buy",
                                     type: "limit",
-                                    quantity: 1,
+                                    quantity: kolvo,
                                     Price: `${price}`,
                                                 
                                     Instrument: {
@@ -100,7 +101,7 @@ var j = 0;
 
                             const price = (Wprice + (Wprice/100*1.25)).toFixed(2)
                             console.log(`Цена продажи ${short[i].SPB}: ${price}`+'\n'+`Ask ${short[i].SPB}: ${Wprice}`+'\n')
-                            const kolvo = 4000/price
+                            const kolvo = 400/price
                     
                             const uniqueId = (Math.random() * (99999999999 - 1) + 1).toFixed(0)
                 
@@ -113,7 +114,7 @@ var j = 0;
                                         
                                     side: "sell",
                                     type: "limit",
-                                    quantity: 1,
+                                    quantity: kolvo,
                                     Price: `${price}`,
                                                 
                                     Instrument: {
@@ -142,5 +143,5 @@ var j = 0;
             j+=1
         }  
     loops()
-    },100)
+    },10)
 })()                     
