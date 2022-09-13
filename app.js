@@ -16,7 +16,7 @@ var j = 0;
         if (date1.slice(0,2) == 11) {
             j = 0
         }
-        if (date1.slice(0,2) == 10 & date1.slice(3,5) == 0 & day != 0 & day != 6 & j == 0 ) {
+        if (date1.slice(0,2) == 10 & date1.slice(3,5) >= 0 & day != 0 & day != 6 & j == 0 ) {
 
             request.post(`https://oauth.alor.ru/refresh?token=${refreshToken}`, async function(error, response, body){
                 try{
@@ -141,7 +141,47 @@ var j = 0;
     
             })
             j+=1
-        }  
-    loops()
+        }
+        
+        if (date1.slice(0,2) == 10 & date1.slice(3,5) >= 3 & day != 0 & day != 6) {
+            request.post(`https://oauth.alor.ru/refresh?token=${refreshToken}`, async function(error, response, body){
+                try{
+                    const data2 = JSON.parse(body)   
+                    const JWT = data2.AccessToken
+                    await fetch(`https://api.alor.ru/md/v2/clients/SPBX/D74357/orders?format=Simple`,{
+                
+                        method: 'GET',
+                                
+                        headers: {
+                            'Content-Type': 'application/json',
+                             Authorization: `Bearer ${JWT}`,
+                        }
+                    })  
+                    .then((response) => {
+                        return response.json();
+                    })
+                    .then((data) => {
+                        var i = 0
+                        while (i<(data.length)) {
+                            var orderId = data[i].id
+                            var status = data[i].status
+                            if (status == 'working') {
+                                fetch(`https://api.alor.ru/commandapi/warptrans/TRADE/v2/client/orders/${orderId}?portfolio=D74357&exchange=SPBX&stop=false&format=Simple`,{
+                
+                                    method: 'DELETE',
+                                
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        Authorization: `Bearer ${JWT}`,
+                                    }
+                                }) 
+                            }
+                            i+=1
+                        }  
+                    })
+                } catch(err){}
+            })
+        }
+        loops()
     },10)
-})()                     
+})()          
