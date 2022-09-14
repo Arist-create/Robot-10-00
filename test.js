@@ -9,6 +9,10 @@ import { TradingViewAPI } from 'tradingview-scraper';
 const tv = new TradingViewAPI();
 
 
+let zapros =  await tv.getTicker(`${long[6].EX}:${long[6].WORLD}`)
+                    const tickerbid = zapros.bid
+                    console.log(zapros)
+
 await fetch('https://invest-public-api.tinkoff.ru/rest/tinkoff.public.invest.api.contract.v1.StopOrdersService/PostStopOrder',{
                 
                                 method: 'POST',
@@ -87,3 +91,5 @@ await fetch('https://invest-public-api.tinkoff.ru/rest/tinkoff.public.invest.api
                         }
                     })
                               
+
+                    

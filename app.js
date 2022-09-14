@@ -16,7 +16,7 @@ var j = 0;
         if (date1.slice(0,2) == 11) {
             j = 0
         }
-        if (date1.slice(0,2) == 10 & date1.slice(3,5) >= 0 & day != 0 & day != 6 & j == 0 ) {
+        if (date1.slice(0,2) == 9 & date1.slice(3,5) >= 59 & day != 0 & day != 6 & j == 0 ) {
 
             request.post(`https://oauth.alor.ru/refresh?token=${refreshToken}`, async function(error, response, body){
                 try{
@@ -43,7 +43,7 @@ var j = 0;
                             if (long[i].EX == 'FWB') {
                                 var Wprice = tickerbid/USDEURlp
                             }
-                            const price = (Wprice - (Wprice/100*1.25)).toFixed(2)
+                            const price = (Wprice - (Wprice/100*1.0)).toFixed(2)
 
                             console.log(`Цена покупки ${long[i].SPB}: ${price}`+'\n'+`Bid ${long[i].SPB}: ${Wprice}`+'\n')
 
@@ -52,27 +52,28 @@ var j = 0;
                     
                             const uniqueId = (Math.random() * (99999999999 - 1) + 1).toFixed(0)
                 
-                            var time = (Math.round(new Date().getTime()/1000.0)) + 120
+                            var time = (Math.round(new Date().getTime()/1000.0)) + 180
                 
-                            fetch('https://api.alor.ru/commandapi/warptrans/TRADE/v2/client/orders/actions/limit',{
+                            await fetch('https://api.alor.ru/warptrans/ITRADE/v2/client/orders/actions/takeProfitLimit',{
                 
                                 method: 'POST',
                                 body: JSON.stringify({
                                         
-                                    side: "buy",
-                                    type: "limit",
-                                    quantity: kolvo,
-                                    Price: `${price}`,
-                                                
-                                    Instrument: {
-                                        Symbol: `${long[i].SPB}`,
-                                        Exchange: "SPBX"
-                                    },
-                                    User: {
-                                        Account: "L01-00000F00",
-                                        Portfolio: "D74357"
-                                    },
-                                    OrderEndUnixTime: `${time}`
+                                    
+                                        "Quantity": 1,
+                                        "Side": "buy",
+                                        "TriggerPrice": price,
+                                        "Price": price,
+                                        "Instrument": {
+                                          "Symbol": `${long[i].SPB}`,
+                                          "Exchange": "SPBX"
+                                        },
+                                        "User": {
+                                          "Account": "L01-00000F00",
+                                          "Portfolio": "D74357"
+                                        },
+                                        "OrderEndUnixTime": `${time}`
+                                      
                                 }),
                                 headers: {
                                     'Content-Type': 'application/json',
@@ -80,6 +81,13 @@ var j = 0;
                                     Authorization: `Bearer ${JWT}`,
                                 }
                             }) 
+                            .then((response) => {
+                                return response.json();
+                              })
+                            .then((data) => {
+                                console.log(data);
+                                
+                            })
                             i+=1  
                         }   
                     }
@@ -99,33 +107,32 @@ var j = 0;
                                 var Wprice = tickerask/USDEURlp
                             }
 
-                            const price = (Wprice + (Wprice/100*1.25)).toFixed(2)
+                            const price = (Wprice + (Wprice/100*1.0)).toFixed(2)
                             console.log(`Цена продажи ${short[i].SPB}: ${price}`+'\n'+`Ask ${short[i].SPB}: ${Wprice}`+'\n')
                             const kolvo = 400/price
                     
                             const uniqueId = (Math.random() * (99999999999 - 1) + 1).toFixed(0)
                 
-                            var time = (Math.round(new Date().getTime()/1000.0)) + 120
+                            var time = (Math.round(new Date().getTime()/1000.0)) + 180
                 
-                            fetch('https://api.alor.ru/commandapi/warptrans/TRADE/v2/client/orders/actions/limit',{
+                            await fetch('https://api.alor.ru/warptrans/ITRADE/v2/client/orders/actions/takeProfitLimit',{
                 
                                 method: 'POST',
                                 body: JSON.stringify({
                                         
-                                    side: "sell",
-                                    type: "limit",
-                                    quantity: kolvo,
-                                    Price: `${price}`,
-                                                
-                                    Instrument: {
-                                        Symbol: `${short[i].SPB}`,
-                                        Exchange: "SPBX"
+                                    "Quantity": 1,
+                                    "Side": "sell",
+                                    "TriggerPrice": price,
+                                    "Price": price,
+                                    "Instrument": {
+                                      "Symbol": `${short[i].SPB}`,
+                                      "Exchange": "SPBX"
                                     },
-                                    User: {
-                                        Account: "L01-00000F00",
-                                        Portfolio: "D74357"
+                                    "User": {
+                                      "Account": "L01-00000F00",
+                                      "Portfolio": "D74357"
                                     },
-                                    OrderEndUnixTime: `${time}`
+                                    "OrderEndUnixTime": `${time}`
                                 }),
                                 headers: {
                                     'Content-Type': 'application/json',
@@ -141,46 +148,6 @@ var j = 0;
     
             })
             j+=1
-        }
-        
-        if (date1.slice(0,2) == 10 & date1.slice(3,5) >= 3 & day != 0 & day != 6) {
-            request.post(`https://oauth.alor.ru/refresh?token=${refreshToken}`, async function(error, response, body){
-                try{
-                    const data2 = JSON.parse(body)   
-                    const JWT = data2.AccessToken
-                    await fetch(`https://api.alor.ru/md/v2/clients/SPBX/D74357/orders?format=Simple`,{
-                
-                        method: 'GET',
-                                
-                        headers: {
-                            'Content-Type': 'application/json',
-                             Authorization: `Bearer ${JWT}`,
-                        }
-                    })  
-                    .then((response) => {
-                        return response.json();
-                    })
-                    .then((data) => {
-                        var i = 0
-                        while (i<(data.length)) {
-                            var orderId = data[i].id
-                            var status = data[i].status
-                            if (status == 'working') {
-                                fetch(`https://api.alor.ru/commandapi/warptrans/TRADE/v2/client/orders/${orderId}?portfolio=D74357&exchange=SPBX&stop=false&format=Simple`,{
-                
-                                    method: 'DELETE',
-                                
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        Authorization: `Bearer ${JWT}`,
-                                    }
-                                }) 
-                            }
-                            i+=1
-                        }  
-                    })
-                } catch(err){}
-            })
         }
         loops()
     },10)
