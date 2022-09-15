@@ -1,4 +1,4 @@
-const refreshToken = 't.KYSfCOqRjzZHg-iglKBsNzCdss8J3qTNDwofUvvYqKGcehgAKtaA8D9osdhOKYaHrCxZkyX66hAHciKyS2nlOg'
+const refreshToken = '612d99e9-4de1-402d-87a9-a05e3cce4fdd'
 const accountId = '2144725658'
 import request from 'request'
 import fetch from 'node-fetch'
@@ -8,10 +8,55 @@ import { long, short } from './baza.js'
 import { TradingViewAPI } from 'tradingview-scraper';
 const tv = new TradingViewAPI();
 
-
-let zapros =  await tv.getTicker(`${long[6].EX}:${long[6].WORLD}`)
-                    const tickerbid = zapros.bid
-                    console.log(zapros)
+request.post(`https://oauth.alor.ru/refresh?token=${refreshToken}`,  function(error, response, body){
+                
+                    const data2 = JSON.parse(body)   
+                    const JWT = data2.AccessToken
+                 
+const uniqueId = (Math.random() * (99999999999 - 1) + 1).toFixed(0)
+                
+                            var time = (Math.round(new Date().getTime()/1000.0)) + 180
+                
+                             fetch('https://api.alor.ru/commandapi/warptrans/TRADE/v2/client/orders/actions/stopLimit',{
+                
+                                method: 'POST',
+                                body: JSON.stringify({
+                                        
+                                    
+                                    
+                                        "side": "sell",
+                                        "condition": "More",
+                                        "triggerPrice": 1000,
+                                        "stopEndUnixTime": `${time}`,
+                                        "price": 1000,
+                                        "quantity": 1,
+                                        "instrument": {
+                                          "symbol": "TSLA",
+                                          "exchange": "SPBX",
+                                          "instrumentGroup":  "SPBXM"
+                                         
+                                        },
+                                        "user": {
+                                          "portfolio": "D74357",
+                                          "exchange": "SPBX"
+                                        }
+                                      
+                                      
+                                }),
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-ALOR-REQID' : `${uniqueId}`,
+                                    Authorization: `Bearer ${JWT}`,
+                                }
+                            }) 
+                            .then((response) => {
+                                return response.json();
+                              })
+                            .then((data) => {
+                                console.log(data);
+                                
+                            })
+                        })
 
 await fetch('https://invest-public-api.tinkoff.ru/rest/tinkoff.public.invest.api.contract.v1.StopOrdersService/PostStopOrder',{
                 

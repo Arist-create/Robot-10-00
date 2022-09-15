@@ -16,7 +16,7 @@ var j = 0;
         if (date1.slice(0,2) == 11) {
             j = 0
         }
-        if (date1.slice(0,2) == 9 & date1.slice(3,5) >= 59 & day != 0 & day != 6 & j == 0 ) {
+        if (date1.slice(0,2) == 9 & date1.slice(3,5) == 59 & day != 0 & day != 6 & j == 0 ) {
 
             request.post(`https://oauth.alor.ru/refresh?token=${refreshToken}`, async function(error, response, body){
                 try{
@@ -45,34 +45,38 @@ var j = 0;
                             }
                             const price = (Wprice - (Wprice/100*1.0)).toFixed(2)
 
-                            console.log(`Цена покупки ${long[i].SPB}: ${price}`+'\n'+`Bid ${long[i].SPB}: ${Wprice}`+'\n')
+                            console.log('\n'+`Цена покупки ${long[i].SPB}: ${price}`+'\n'+`Bid ${long[i].SPB}: ${Wprice}`)
 
-                            const kolvo = 400/price
+                            const kolvo = 8000/price
                            
                     
                             const uniqueId = (Math.random() * (99999999999 - 1) + 1).toFixed(0)
                 
                             var time = (Math.round(new Date().getTime()/1000.0)) + 180
                 
-                            await fetch('https://api.alor.ru/warptrans/ITRADE/v2/client/orders/actions/takeProfitLimit',{
+                            await fetch('https://api.alor.ru/commandapi/warptrans/TRADE/v2/client/orders/actions/stopLimit',{
                 
                                 method: 'POST',
                                 body: JSON.stringify({
                                         
                                     
-                                        "Quantity": 1,
-                                        "Side": "buy",
-                                        "TriggerPrice": price,
-                                        "Price": price,
-                                        "Instrument": {
-                                          "Symbol": `${long[i].SPB}`,
-                                          "Exchange": "SPBX"
+                                    
+                                        "side": "buy",
+                                        "condition": "Less",
+                                        "triggerPrice": price,
+                                        "stopEndUnixTime": `${time}`,
+                                        "price": price,
+                                        "quantity": kolvo,
+                                        "instrument": {
+                                          "symbol": `${long[i].SPB}`,
+                                          "exchange": "SPBX",
+                                          "instrumentGroup":  'SPBXM'
                                         },
-                                        "User": {
-                                          "Account": "L01-00000F00",
-                                          "Portfolio": "D74357"
-                                        },
-                                        "OrderEndUnixTime": `${time}`
+                                        "user": {
+                                          "portfolio": "D74357",
+                                          "exchange": "SPBX"
+                                        }
+                                      
                                       
                                 }),
                                 headers: {
@@ -108,8 +112,8 @@ var j = 0;
                             }
 
                             const price = (Wprice + (Wprice/100*1.0)).toFixed(2)
-                            console.log(`Цена продажи ${short[i].SPB}: ${price}`+'\n'+`Ask ${short[i].SPB}: ${Wprice}`+'\n')
-                            const kolvo = 400/price
+                            console.log('\n'+`Цена продажи ${short[i].SPB}: ${price}`+'\n'+`Ask ${short[i].SPB}: ${Wprice}`)
+                            const kolvo = 4000/price
                     
                             const uniqueId = (Math.random() * (99999999999 - 1) + 1).toFixed(0)
                 
@@ -120,21 +124,24 @@ var j = 0;
                                 method: 'POST',
                                 body: JSON.stringify({
                                         
-                                    "Quantity": 1,
-                                    "Side": "sell",
-                                    "TriggerPrice": price,
-                                    "Price": price,
-                                    "Instrument": {
-                                      "Symbol": `${short[i].SPB}`,
-                                      "Exchange": "SPBX"
-                                    },
-                                    "User": {
-                                      "Account": "L01-00000F00",
-                                      "Portfolio": "D74357"
-                                    },
-                                    "OrderEndUnixTime": `${time}`
+                                        "side": "sell",
+                                        "condition": "More",
+                                        "triggerPrice": price,
+                                        "stopEndUnixTime": `${time}`,
+                                        "price": price,
+                                        "quantity": kolvo,
+                                        "instrument": {
+                                          "symbol": `${short[i].SPB}`,
+                                          "exchange": "SPBX",
+                                          "instrumentGroup": 'SPBXM'
+                                        },
+                                        "user": {
+                                          "portfolio": "D74357",
+                                          "exchange": "SPBX"
+                                        }
                                 }),
                                 headers: {
+
                                     'Content-Type': 'application/json',
                                     'X-ALOR-REQID' : `${uniqueId}`,
                                     Authorization: `Bearer ${JWT}`,
