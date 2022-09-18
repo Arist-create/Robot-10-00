@@ -35,32 +35,33 @@ var j = 0;
                         
                         let zapros =  await tv.getTicker(`${long[i].EX}:${long[i].WORLD}`)
                         const tickerbid = zapros.bid
-                        if (tickerbid != undefined) {
-                    
-                            if (long[i].EX == 'HKEX') {
-                                var Wprice = tickerbid/USDHKDlp*(long[i].MN)
-                            }
-                            if (long[i].EX == 'FWB') {
-                                var Wprice = tickerbid/USDEURlp
-                            }
-                            const price = (Wprice - (Wprice/100*1.0)).toFixed(2)
+                        const tradable = zapros.is_tradable
 
-                            console.log('\n'+`Цена покупки ${long[i].SPB}: ${price}`+'\n'+`Bid ${long[i].SPB}: ${Wprice}`)
-
-                            const kolvo = 8000/price
-                           
+                        if (tickerbid != undefined & tradable != undefined ) {
+                            
+                            if (tradable == true) {
                     
-                            const uniqueId = (Math.random() * (99999999999 - 1) + 1).toFixed(0)
+                                if (long[i].EX == 'HKEX') {
+                                    var Wprice = tickerbid/USDHKDlp*(long[i].MN)
+                                }
+                                if (long[i].EX == 'FWB') {
+                                    var Wprice = tickerbid/USDEURlp
+                                }
+                                const price = (Wprice - (Wprice/100*1.0)).toFixed(2)
+
+                                console.log('\n'+`Цена покупки ${long[i].SPB}: ${price}`+'\n'+`Bid ${long[i].SPB}: ${Wprice}`)
+
+                                const kolvo = 8000/price
+                    
+                                const uniqueId = (Math.random() * (99999999999 - 1) + 1).toFixed(0)
                 
-                            var time = (Math.round(new Date().getTime()/1000.0)) + 180
+                                var time = (Math.round(new Date().getTime()/1000.0)) + 180
                 
-                            await fetch('https://api.alor.ru/commandapi/warptrans/TRADE/v2/client/orders/actions/stopLimit',{
+                                await fetch('https://api.alor.ru/commandapi/warptrans/TRADE/v2/client/orders/actions/stopLimit',{
                 
-                                method: 'POST',
-                                body: JSON.stringify({
+                                    method: 'POST',
+                                    body: JSON.stringify({
                                         
-                                    
-                                    
                                         "side": "buy",
                                         "condition": "Less",
                                         "triggerPrice": price,
@@ -76,22 +77,20 @@ var j = 0;
                                           "portfolio": "D74357",
                                           "exchange": "SPBX"
                                         }
-                                      
-                                      
-                                }),
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'X-ALOR-REQID' : `${uniqueId}`,
-                                    Authorization: `Bearer ${JWT}`,
-                                }
-                            }) 
-                            .then((response) => {
-                                return response.json();
-                              })
-                            .then((data) => {
-                                console.log(data);
-                                
-                            })
+                                    }),
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-ALOR-REQID' : `${uniqueId}`,
+                                        Authorization: `Bearer ${JWT}`,
+                                    }
+                                }) 
+                                .then((response) => {
+                                    return response.json();
+                                })
+                                .then((data) => {
+                                    console.log(data);
+                                })
+                            }
                             i+=1  
                         }   
                     }
@@ -102,27 +101,31 @@ var j = 0;
                         
                         let zapros =  await tv.getTicker(`${short[i].EX}:${short[i].WORLD}`)
                         const tickerask = zapros.ask
-                        if (tickerask != undefined) {
+                        const tradable = zapros.is_tradable
 
-                            if (short[i].EX == 'HKEX') {
-                                var Wprice = tickerask/USDHKDlp*(short[i].MN)
-                            }
-                            if (short[i].EX == 'FWB') {
-                                var Wprice = tickerask/USDEURlp
-                            }
+                        if (tickerask != undefined & tradable != undefined) {
+                            
+                            if (tradable == true) {
 
-                            const price = (Wprice + (Wprice/100*1.0)).toFixed(2)
-                            console.log('\n'+`Цена продажи ${short[i].SPB}: ${price}`+'\n'+`Ask ${short[i].SPB}: ${Wprice}`)
-                            const kolvo = 4000/price
+                                if (short[i].EX == 'HKEX') {
+                                    var Wprice = tickerask/USDHKDlp*(short[i].MN)
+                                }
+                                if (short[i].EX == 'FWB') {
+                                    var Wprice = tickerask/USDEURlp
+                                }
+
+                                const price = (Wprice + (Wprice/100*1.0)).toFixed(2)
+                                console.log('\n'+`Цена продажи ${short[i].SPB}: ${price}`+'\n'+`Ask ${short[i].SPB}: ${Wprice}`)
+                                const kolvo = 4000/price
                     
-                            const uniqueId = (Math.random() * (99999999999 - 1) + 1).toFixed(0)
+                                const uniqueId = (Math.random() * (99999999999 - 1) + 1).toFixed(0)
                 
-                            var time = (Math.round(new Date().getTime()/1000.0)) + 180
+                                var time = (Math.round(new Date().getTime()/1000.0)) + 180
                 
-                            await fetch('https://api.alor.ru/warptrans/ITRADE/v2/client/orders/actions/takeProfitLimit',{
+                                await fetch('https://api.alor.ru/warptrans/ITRADE/v2/client/orders/actions/takeProfitLimit',{
                 
-                                method: 'POST',
-                                body: JSON.stringify({
+                                    method: 'POST',
+                                    body: JSON.stringify({
                                         
                                         "side": "sell",
                                         "condition": "More",
@@ -139,20 +142,65 @@ var j = 0;
                                           "portfolio": "D74357",
                                           "exchange": "SPBX"
                                         }
-                                }),
-                                headers: {
+                                    }),
+                                    headers: {
 
-                                    'Content-Type': 'application/json',
-                                    'X-ALOR-REQID' : `${uniqueId}`,
-                                    Authorization: `Bearer ${JWT}`,
-                                }
-                            })   
+                                        'Content-Type': 'application/json',
+                                        'X-ALOR-REQID' : `${uniqueId}`,
+                                        Authorization: `Bearer ${JWT}`,
+                                    }
+                                })   
+                            }
                             i+=1  
                         }   
                     }
 
                 } catch (err)  {}
     
+            })
+            j+=1
+        }
+
+        if (date1.slice(0,2) == 10 & date1.slice(3,5) == 3 & day != 0 & day != 6 & j == 1 ) {
+            request.post(`https://oauth.alor.ru/refresh?token=${refreshToken}`, async function(error, response, body){
+                try{
+                    const data2 = JSON.parse(body)   
+                    const JWT = data2.AccessToken
+
+                    await fetch('https://api.alor.ru/md/v2/clients/SPBX/D74357/orders?format=Simple',{
+                
+                        method: 'GET',
+                                
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${JWT}`,
+                        }
+                    }) 
+                    .then((response) => {
+                        return response.json();
+                    })
+                    .then((data) => {
+                        console.log(data);
+                        if (data.length != 0 ) {
+                            i = 0
+                            while (i < data.length) {
+                                const orderId = data[i].id
+                                const status = data[i].status 
+                                if (status == 'working') {
+                                    fetch(`https://api.alor.ru/commandapi/warptrans/ITRADE/v2/client/orders/${orderId}?portfolio=D74357&exchange=SPBX&stop=false&format=Simple`,{
+                
+                                        method: 'DELETE',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            Authorization: `Bearer ${JWT}`,
+                                        }
+                                    }) 
+                                }
+                                i+=1
+                            }
+                        }    
+                    })
+                } catch (err) {}
             })
             j+=1
         }
