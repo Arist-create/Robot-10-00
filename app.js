@@ -51,7 +51,7 @@ var j = 0;
 
                                 console.log('\n'+`Цена покупки ${long[i].SPB}: ${price}`+'\n'+`Bid ${long[i].SPB}: ${Wprice}`)
 
-                                const kolvo = 8000/price
+                                const kolvo = (8000/price).toFixed(0)
                     
                                 const uniqueId = (Math.random() * (99999999999 - 1) + 1).toFixed(0)
                 
@@ -116,13 +116,13 @@ var j = 0;
 
                                 const price = (Wprice + (Wprice/100*1.0)).toFixed(2)
                                 console.log('\n'+`Цена продажи ${short[i].SPB}: ${price}`+'\n'+`Ask ${short[i].SPB}: ${Wprice}`)
-                                const kolvo = 4000/price
+                                const kolvo = (4000/price).toFixed(0)
                     
                                 const uniqueId = (Math.random() * (99999999999 - 1) + 1).toFixed(0)
                 
                                 var time = (Math.round(new Date().getTime()/1000.0)) + 180
                 
-                                await fetch('https://api.alor.ru/warptrans/ITRADE/v2/client/orders/actions/takeProfitLimit',{
+                                await fetch('https://api.alor.ru/commandapi/warptrans/TRADE/v2/client/orders/actions/stopLimit',{
                 
                                     method: 'POST',
                                     body: JSON.stringify({
@@ -149,6 +149,12 @@ var j = 0;
                                         'X-ALOR-REQID' : `${uniqueId}`,
                                         Authorization: `Bearer ${JWT}`,
                                     }
+                                })
+                                .then((response) => {
+                                    return response.json();
+                                })
+                                .then((data) => {
+                                    console.log(data);
                                 })   
                             }
                             i+=1  
