@@ -35,11 +35,11 @@ var j = 0;
                         
                         let zapros =  await tv.getTicker(`${long[i].EX}:${long[i].WORLD}`)
                         const tickerbid = zapros.bid
-                        const tradable = zapros.is_tradable
+                        const session = zapros.current_session
 
-                        if (tickerbid != undefined & tradable != undefined ) {
+                        if (tickerbid != undefined & session != undefined ) {
                             
-                            if (tradable == true) {
+                            if (session == 'market') {
                     
                                 if (long[i].EX == 'HKEX') {
                                     var Wprice = tickerbid/USDHKDlp*(long[i].MN)
@@ -101,11 +101,11 @@ var j = 0;
                         
                         let zapros =  await tv.getTicker(`${short[i].EX}:${short[i].WORLD}`)
                         const tickerask = zapros.ask
-                        const tradable = zapros.is_tradable
+                        const session = zapros.current_session
 
-                        if (tickerask != undefined & tradable != undefined) {
+                        if (tickerask != undefined & session != undefined) {
                             
-                            if (tradable == true) {
+                            if (session == 'market') {
 
                                 if (short[i].EX == 'HKEX') {
                                     var Wprice = tickerask/USDHKDlp*(short[i].MN)

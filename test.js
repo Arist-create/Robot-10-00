@@ -9,4 +9,7 @@ import { TradingViewAPI } from 'tradingview-scraper';
 const tv = new TradingViewAPI();
 
 
-
+let zapros =  await tv.getTicker(`${long[0].EX}:${long[0].WORLD}`)
+                        const tickerbid = zapros.bid
+                        const tradable = zapros.is_tradable
+                        console.log(zapros)
