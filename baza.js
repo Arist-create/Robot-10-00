@@ -36,6 +36,9 @@ export const long =
         },
         {
             "SPB": 'SQ', WORLD: 'SQ3', EX: 'FWB', FIGI: 'BBG0018SLC07'
+        },
+        {
+            "SPB": 'INTC', WORLD: 'INL', EX: 'FWB'
         }
     ]
 
@@ -66,6 +69,9 @@ export const short = [
     },
     {
         "SPB": 'SQ', WORLD: 'SQ3', EX: 'FWB', FIGI: 'BBG0018SLC07'
+    },
+    {
+        "SPB": 'INTC', WORLD: 'INL', EX: 'FWB'
     }
 ]
 
