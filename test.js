@@ -8,6 +8,58 @@ import { long, short } from './baza.js'
 import { TradingViewAPI } from 'tradingview-scraper';
 const tv = new TradingViewAPI();
 const uniqueId = (Math.random() * (99999999999 - 1) + 1).toFixed(0)
+
+request.post(`https://oauth.alor.ru/refresh?token=${refreshToken}`, async function(error, response, body){
+                try{
+                    const data2 = JSON.parse(body)   
+                    const JWT = data2.AccessToken
+
+                    await fetch('https://api.alor.ru/md/v2/clients/SPBX/D74357/orders?format=Simple',{
+                
+                        method: 'GET',
+                                
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${JWT}`,
+                        }
+                    }) 
+                    .then((response) => {
+                        return response.json();
+                    })
+                    .then((data) => {
+                        console.log(data.length)
+                        console.log(data[i].id)
+                            i = 0
+                            while (i < data.length) {
+                                const orderId = data[i].id
+                                console.log(orderId)
+                                const status = data[i].status 
+                                if (status == 'working') {
+                                    fetch(`https://api.alor.ru/commandapi/warptrans/ITRADE/v2/client/orders/${Number (orderId)}?portfolio=D74357&stop=false&jsonResponse=true&format=Simple`,{
+                
+                                        method: 'DELETE',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            Authorization: `Bearer ${JWT}`,
+                                        }
+                                    }) 
+                                    .then((response) => {
+                                        return response.json();
+                                    })
+                                    .then((data) => {
+                                        console.log(data);
+                                    })
+                                }
+                                i+=1
+                            }
+                          
+                    })
+                } catch (err) {}
+            })
+
+
+
+
                 
                                 var time = (Math.round(new Date().getTime()/1000.0)) + 180
                                 request.post(`https://oauth.alor.ru/refresh?token=${refreshToken}`, async function(error, response, body){
@@ -21,7 +73,28 @@ const uniqueId = (Math.random() * (99999999999 - 1) + 1).toFixed(0)
                                         'Content-Type': 'application/json',
                                         Authorization: `Bearer ${JWT}`,
                                     }
-                                  
+                                })
+                                    while (i < data.length) {
+                                        const orderId = data[i].id
+                                        const status = data[i].status 
+                                        if (status == 'working') {
+                                            fetch(`https://api.alor.ru/commandapi/warptrans/TRADE/v2/client/orders/${orderId}?portfolio=D74357&exchange=SPBX&stop=false&jsonResponse=true&format=Simple`,{
+                        
+                                                method: 'DELETE',
+                                                headers: {
+                                                    'Content-Type': 'application/json',
+                                                    Authorization: `Bearer ${JWT}`,
+                                                }
+                                            }) 
+                                            .then((response) => {
+                                                return response.json();
+                                            })
+                                            .then((data) => {
+                                                console.log(data);
+                                            })
+                                        }
+                                        i+=1
+                                    }
                                 })   
                                 .then((response) => {
                                     return response.json();

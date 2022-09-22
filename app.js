@@ -186,14 +186,14 @@ var j = 0;
                         return response.json();
                     })
                     .then((data) => {
-                        console.log(data);
-                        if (data.length != 0 ) {
-                            i = 0
+                        console.log(data)
+                        if (data.length != 0) {
+                            var i = 0
                             while (i < data.length) {
                                 const orderId = data[i].id
                                 const status = data[i].status 
                                 if (status == 'working') {
-                                    fetch(`https://api.alor.ru/commandapi/warptrans/ITRADE/v2/client/orders/${orderId}?portfolio=D74357&exchange=SPBX&stop=false&format=Simple`,{
+                                    fetch(`https://api.alor.ru/commandapi/warptrans/ITRADE/v2/client/orders/${orderId}?portfolio=D74357&exchange=SPBX&stop=false&jsonResponse=true&format=Simple`,{
                 
                                         method: 'DELETE',
                                         headers: {
@@ -201,10 +201,16 @@ var j = 0;
                                             Authorization: `Bearer ${JWT}`,
                                         }
                                     }) 
+                                    .then((response) => {
+                                        return response.json();
+                                    })
+                                    .then((data) => {
+                                        console.log(data);
+                                    })
                                 }
                                 i+=1
                             }
-                        }    
+                        }
                     })
                 } catch (err) {}
             })
