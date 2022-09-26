@@ -26,9 +26,6 @@ export const long =
             "SPB": 'NVDA', WORLD: 'NVD', EX: 'FWB', FIGI: 'BBG000BBJQV0'
         },
         {
-            "SPB": 'CCL', WORLD: 'CVC1', EX: 'FWB', FIGI: 'BBG000BF6LY3'
-        },
-        {
             "SPB": 'NFLX', WORLD: 'NFC', EX: 'FWB', FIGI: 'BBG000CL9VN6'
         },
         {
@@ -54,9 +51,6 @@ export const short = [
     },
     {
         "SPB": 'TSLA', WORLD: 'TL0', EX: 'FWB', FIGI: 'BBG000N9MNX3'
-    },
-    {
-        "SPB": 'CCL', WORLD: 'CVC1', EX: 'FWB', FIGI: 'BBG000BF6LY3'
     },
     {
         "SPB": 'VIPS', WORLD: '1VPA', EX: 'FWB', FIGI: 'BBG002NLDLV8'
