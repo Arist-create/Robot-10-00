@@ -1,4 +1,4 @@
-const refreshToken = '612d99e9-4de1-402d-87a9-a05e3cce4fdd'
+const refreshToken = x
 import request from 'request'
 import fetch from 'node-fetch'
 import { long, short } from './baza.js'
